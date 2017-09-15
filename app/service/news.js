@@ -1,3 +1,5 @@
+'use strict';
+
 // app/service/news.js
 module.exports = app => {
   class NewsService extends app.Service {

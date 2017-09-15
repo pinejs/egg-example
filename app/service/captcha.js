@@ -1,37 +1,42 @@
+'use strict';
+
 // app/service/captcha.js
 module.exports = app => {
-  // read config
-  const { serverUrl } = app.config.captcha;
-  const { serverUrl: userServerUrl } = app.config.users;
-
   class CaptchaService extends app.Service {
+    constructor(ctx) {
+      super(ctx);
+      this.baseUri = app.config.captcha.serverUrl;
+      this.userServiceBaseUri = app.config.users.serverUrl;
+    }
+
     // 生成图片验证码
-    * captcha() {
+    async generateCaptcha() {
       // use build-in http client to GET captcha api
-      const { data: captcha } = yield this.ctx.curl(`${userServerUrl}/captcha/sms`, {
+      const { data: captcha } = await this.ctx.curl(`${this.userServiceBaseUri}/captcha/sms`, {
         dataType: 'json',
       });
 
-      return captcha.captchaId;
+      return captcha;
     }
 
     // 获取验证码图片
-    * captchaImage(captchaId) {
-      const { res } = yield this.ctx.curl(`${serverUrl}/captcha.jpeg`, {
+    async loadCaptchaImage(captchaId) {
+      const { res } = await this.ctx.curl(`${this.baseUri}/captcha.jpeg`, {
         data: {
-          id: captchaId
+          id: captchaId,
         },
-        dataType: 'base64'
+        streaming: true,
       });
 
       return res.data;
     }
 
-    //验证图片验证码
-    * verifyCaptcha(captchaId, code){
-      //TODO
+    // 验证图片验证码
+    async verifyCaptcha(captchaId, code) {
+      // TODO
+      this.ctx.logger.info('verify captcha: %s, code: %s', captchaId, code);
     }
   }
 
   return CaptchaService;
-}
+};

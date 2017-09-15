@@ -6,8 +6,27 @@ module.exports = appInfo => {
   // should change to your own
   config.keys = appInfo.name + '_1499736497523_4848';
 
-  //sequelize
-  conf.sequelize = {
+  config.middleware = [ 'errorHandler' ];
+
+  // disable xframe & csrf
+  config.security = {
+    xframe: {
+      enable: false,
+    },
+    xss: {
+      enable: false,
+    },
+    csrf: {
+      enable: false,
+      ignoreJSON: true,
+      // 判断是否需要 ignore 的方法，请求上下文 context 作为第一个参数
+      ignore: '',
+      headerName: 'x-csrf-token', // 通过 header 传递 CSRF token 的默认字段为 x-csrf-token
+    },
+  };
+
+  // sequelize
+  config.sequelize = {
     dialect: 'mysql', // support: mysql, mariadb, postgres, mssql
     database: 'funds_order',
     host: 'localhost',
@@ -17,7 +36,7 @@ module.exports = appInfo => {
     pool: {
       max: 5,
       min: 0,
-      idle: 10000
+      idle: 10000,
     },
   };
 
@@ -30,7 +49,7 @@ module.exports = appInfo => {
   };
 
   config.captcha = {
-      serverUrl: 'http://172.30.248.170/api/v1/captcha'
+    serverUrl: 'http://172.30.248.170/api/v1/captcha',
   };
 
   config.news = {
@@ -41,13 +60,13 @@ module.exports = appInfo => {
   config.users = {
     pageSize: 5,
     serverUrl: 'http://devtest.360taihe.com/api/v1/account',
-    adminUrl: 'http://devtest.360taihe.com/api/v1/account-admin'
+    adminUrl: 'http://devtest.360taihe.com/api/v1/account-admin',
   };
 
   config.sms = {
     pageSize: 5,
     serverUrl: 'http://devtest.360taihe.com/api/v1/trcsms',
-    adminUrl: 'http://devtest.360taihe.com/api/v1/trcsms/admin'
+    adminUrl: 'http://devtest.360taihe.com/api/v1/trcsms/admin',
   };
 
   config.ecard = {
@@ -58,7 +77,7 @@ module.exports = appInfo => {
   config.checkstand = {
     pageSize: 5,
     serverUrl: 'http://devtest.360taihe.com/api/v3/funds',
-    callbackUrl: 'http://devtest.360taihe.com/api/v3/funds-callback'
+    callbackUrl: 'http://devtest.360taihe.com/api/v3/funds-callback',
   };
 
   return config;
