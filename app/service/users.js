@@ -19,22 +19,22 @@ module.exports = app => {
     }
 
     // 发送注册验证码
-    async sendSmsCode(mobile) {
+    async sendSmsCode(phone) {
       const res = await this.request('/validate/login/{mobile}', {
         method: 'POST',
         data: {
-          phone: mobile,
+          phone,
         }
       });
       return res.data;
     }
 
     // 快速注册
-    async quickRegister(mobile, smsCode) {
+    async quickRegister(phone, smsCode) {
       const res = await this.request('/auth/simple', {
         method: 'POST',
         data: {
-          phone: mobile,
+          phone,
           smsCode,
         }
       });
@@ -42,25 +42,25 @@ module.exports = app => {
     }
 
     // 注册
-    async register(mobile, smsCode, password) {
+    async register(phone, smsCode, password) {
       const res = await this.request('/user/register', {
         method: 'POST',
         data: {
-          phone: mobile,
+          phone,
           smsCode,
           password,
         }
       });
-      return res.data;
+      return res;
     }
 
     // 登录
-    async login(mobile, password) {
+    async login(phone, password) {
       this.ctx.logger.info("login start...")
       const res = await this.request('/user/login', {
         method: 'POST',
         data: {
-          phone: mobile,
+          phone,
           password,
         }
       });
